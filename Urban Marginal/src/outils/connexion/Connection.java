@@ -13,10 +13,19 @@ public class Connection extends Thread {
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	
+	public void envoi(Object unObjet){
+		try {
+			out.writeObject(unObjet);
+			out.flush();
+		} catch (IOException e) {
+			System.out.println("Erreur sur l'objet out : "+e);
+		}
+	}
+	
 	public void run(){
 		boolean inOk = true;
 		Object reception;
-		while(inOk = true){
+		while(inOk){
 			try {
 				reception = in.readObject();
 			} catch (ClassNotFoundException e) {
