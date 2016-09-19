@@ -12,7 +12,7 @@ import vue.Arene;
 import vue.ChoixJoueur;
 import vue.EntreeJeu;
 
-public class Controle {
+public class Controle implements Global{
 	
 	private EntreeJeu frmEntreeJeu;
 	private Jeu leJeu;
@@ -27,7 +27,7 @@ public class Controle {
 	
 	private void evenementEntreeJeu(Object info) {
 		if((String)info == "serveur"){
-			ServeurSocket serveursocket = new ServeurSocket(this, 6666);
+			ServeurSocket serveursocket = new ServeurSocket(this, PORT);
 			leJeu = new JeuServeur(this);
 			frmEntreeJeu.dispose();
 			frmArene = new Arene();
@@ -35,10 +35,11 @@ public class Controle {
 		}
 		else{
 			ClientSocket clientsocket;
-			(clientsocket = new ClientSocket ((String)info, 6666, this)).isConnexionOk();
+			(clientsocket = new ClientSocket ((String)info, PORT, this)).isConnexionOk();
 			leJeu = new JeuClient(this);
 			frmArene = new Arene();
 			frmChoixJoueur = new ChoixJoueur();
+			frmChoixJoueur.setSize(416, 313);
 			frmChoixJoueur.setVisible(true);
 			frmEntreeJeu.dispose();
 		}
