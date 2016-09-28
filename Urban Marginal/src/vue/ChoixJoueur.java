@@ -9,9 +9,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controleur.Controle;
 import controleur.Global;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTextField;
@@ -24,15 +27,37 @@ public class ChoixJoueur extends JFrame implements Global{
 
 	private JPanel contentPane;
 	private JTextField txtPseudo;
-	private int numPerso;
+	private int numPerso = 1;
 	private JLabel lblPersonnage;
-	String test = PERSO+DROITE+MARCHE+"d"+DROITE+ESTIMAGE;
+	private Controle controle;
 	
 	private void lblPrecedent_clic(){
+		if(numPerso == 1){
+		numPerso = NBPERSOS;
+		}
+		else{
+		numPerso = numPerso - 1;
+		}
+		affichePerso();
 	}
 	private void lblSuivant_clic(){
+		if(numPerso == NBPERSOS){
+		numPerso = 1;
+		}
+		else{
+		numPerso = numPerso + 1;
+		}
+		affichePerso();
 	}
 	private void lblGo_clic(){
+		if(txtPseudo.getText().equals("")){
+			JOptionPane.showMessageDialog(null, "Pseudo obligatoire");
+			txtPseudo.requestFocus();
+		}
+		else{
+			controle.evenementVue(this, "");
+		}
+		
 	}
 	private void souris_normale(){
 		contentPane.setCursor(normal);
@@ -41,13 +66,14 @@ public class ChoixJoueur extends JFrame implements Global{
 		contentPane.setCursor(doigt);
 	}
 	private void affichePerso(){
-		lblPersonnage.setIcon(new ImageIcon(PERSO+DROITE+MARCHE+"d"+DROITE+ESTIMAGE));
+		lblPersonnage.setIcon(new ImageIcon(PERSO+numPerso+MARCHE+DROITE+"d"+DROITE+ESTIMAGE));
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public ChoixJoueur() {
+	public ChoixJoueur(Controle controle) {
+		this.controle = controle;
 		setTitle("Choice");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 416, 313);

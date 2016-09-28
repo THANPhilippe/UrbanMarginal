@@ -60,5 +60,6 @@ public class Connection extends Thread {
 		}
 		
 		start();
+		((controleur.Controle)this.leRecepteur).setConnection(this);
 	}
 }
