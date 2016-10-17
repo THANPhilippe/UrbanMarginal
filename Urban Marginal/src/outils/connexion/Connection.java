@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import javax.swing.JOptionPane;
+import controleur.Controle;
 
 public class Connection extends Thread {
 	
@@ -15,6 +16,7 @@ public class Connection extends Thread {
 	
 	public void envoi(Object unObjet){
 		try {
+			System.out.println(unObjet);
 			out.writeObject(unObjet);
 			out.flush();
 		} catch (IOException e) {
@@ -28,6 +30,7 @@ public class Connection extends Thread {
 		while(inOk){
 			try {
 				reception = in.readObject();
+				((Controle)this.leRecepteur).receptionInfo(this,reception);
 			} catch (ClassNotFoundException e) {
 				System.out.println("Classe Object non trouvée : "+e);
 				System.exit(0);

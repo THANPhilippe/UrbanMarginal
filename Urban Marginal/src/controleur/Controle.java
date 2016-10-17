@@ -2,6 +2,8 @@
 package controleur;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import modele.Jeu;
 import modele.JeuClient;
@@ -21,8 +23,38 @@ public class Controle implements Global{
 	private ChoixJoueur frmChoixJoueur;
 	private Connection connection;
 	
+	public void evenementModele(Object unJeu, String ordre, Object info ){
+		if(unJeu instanceof JeuServeur){
+			evenementJeuServeur(ordre, info);
+		}
+		if(unJeu instanceof JeuClient){
+			evenementJeuClient(ordre,info);
+		}
+	}
+	
+	private void evenementJeuClient(String ordre, Object info) {
+		if(ordre == "ajout panel murs"){
+			this.frmArene.ajoutPanelMurs((JPanel)info);
+		}
+		
+	}
+
+	private void evenementJeuServeur(String ordre, Object info) {
+		// TODO Auto-generated method stub
+		if(ordre == "ajout mur"){
+			frmArene.ajoutMur((JLabel)info);
+		}
+		if(ordre == "envoi panel mur"){
+			((JeuServeur)this.leJeu).envoi((Connection)info, this.frmArene.getJpnMurs() );
+		}
+		
+	}
+
 	public void setConnection(Connection connection){
 		this.connection = connection;
+		if(leJeu instanceof JeuServeur){
+			leJeu.setConnection(connection);
+		}
 	}
 	
 	public void evenementVue(JFrame uneFrame, Object info) {
@@ -30,13 +62,14 @@ public class Controle implements Global{
 			evenementEntreeJeu(info);
 		}
 		if(uneFrame instanceof ChoixJoueur){
-			evenementChoixJoueur();
+			evenementChoixJoueur(info);
 		}
 	}
 	
-	private void evenementChoixJoueur() {
-		// TODO Auto-generated method stub
-		
+	private void evenementChoixJoueur(Object info) {
+		((JeuClient)this.leJeu).envoi(info);
+		frmChoixJoueur.dispose();
+		frmArene.setVisible(true);
 	}
 
 	private void evenementEntreeJeu(Object info) {
@@ -45,6 +78,7 @@ public class Controle implements Global{
 			leJeu = new JeuServeur(this);
 			frmEntreeJeu.dispose();
 			frmArene = new Arene();
+			((JeuServeur)this.leJeu).constructionMurs();
 			frmArene.setVisible(true);
 		}
 		else{
@@ -58,6 +92,10 @@ public class Controle implements Global{
 			frmChoixJoueur.setVisible(true);
 			frmEntreeJeu.dispose();
 		}
+	}
+	
+	public void receptionInfo(Connection connection, Object info){
+		leJeu.reception(connection, info);
 	}
 
 	public Controle () {
