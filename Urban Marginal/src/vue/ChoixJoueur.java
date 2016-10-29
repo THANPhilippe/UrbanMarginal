@@ -66,7 +66,7 @@ public class ChoixJoueur extends JFrame implements Global{
 		contentPane.setCursor(doigt);
 	}
 	private void affichePerso(){
-		lblPersonnage.setIcon(new ImageIcon(PERSO+numPerso+MARCHE+DROITE+"d"+DROITE+ESTIMAGE));
+		lblPersonnage.setIcon(new ImageIcon(PERSO+numPerso+MARCHE+DROITE+"d"+GAUCHE+ESTIMAGE));
 	}
 
 	/**

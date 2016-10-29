@@ -14,9 +14,9 @@ public class Connection extends Thread {
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	
-	public void envoi(Object unObjet){
+	public synchronized void envoi(Object unObjet){
 		try {
-			System.out.println(unObjet);
+			this.out.reset() ;
 			out.writeObject(unObjet);
 			out.flush();
 		} catch (IOException e) {
@@ -37,6 +37,7 @@ public class Connection extends Thread {
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null, "l'ordinateur distant s'est déconnecté");
 				inOk = false;
+				((Controle)this.leRecepteur).deconnection(this);
 				try {
 					in.close();
 				} catch (IOException e1) {
