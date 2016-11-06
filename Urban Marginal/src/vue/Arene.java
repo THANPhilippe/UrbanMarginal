@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 import controleur.Controle;
 import controleur.Global;
+import outils.son.Son;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -25,14 +26,15 @@ public class Arene extends JFrame implements Global {
 	private JTextField txtSaisie = new JTextField();
 	private JTextArea txtChat = new JTextArea();
 	private boolean client;
+	private Son[] lesSons = new Son[SON.length];
 	JPanel jpnMurs = new JPanel();
 	JPanel jpnJeu = new JPanel();
 	JPanel jpnConso = new JPanel();
 	
 	public void supprAjoutConsommable(JLabel newConsommable){
-		this.jpnConso.removeAll();
-		this.jpnConso.add(newConsommable);
-		this.jpnConso.repaint();
+		jpnConso.removeAll();
+		jpnConso.add(newConsommable);
+		jpnConso.repaint();
 	}
 	
 	public void ajoutMur(JLabel unMur){
@@ -71,6 +73,10 @@ public class Arene extends JFrame implements Global {
 		jpnJeu.add(unLabel,num);
 		jpnJeu.repaint();
 		
+	}
+	
+	public void joueSon(int numSon){
+		this.lesSons[numSon].play();
 	}
 	
 	private void contentPane_keyPressed(KeyEvent arg0) {
@@ -177,18 +183,18 @@ public class Arene extends JFrame implements Global {
 		jpnJeu.setLayout(null);
 		jpnJeu.setOpaque(false);
 		
+				
+		jpnConso.setBounds(0, 0, L_ARENE, H_ARENE);
+		contentPane.add(jpnConso);
+		jpnConso.setLayout(null);
+		jpnConso.setOpaque(false);
+		
 		jpnMurs.setBounds(0, 0, L_ARENE, H_ARENE);
 		contentPane.add(jpnMurs);
 		jpnMurs.setLayout(null);
 		jpnMurs.setOpaque(false);
 		
 		jpnJeu.setOpaque(false);
-		
-				
-		jpnConso.setBounds(0, 0, L_ARENE, H_ARENE);
-		contentPane.add(jpnConso);
-		jpnConso.setLayout(null);
-		jpnConso.setOpaque(false);
 		
 		JLabel lblFond = new JLabel("");
 		lblFond.setBounds(0, 0, L_ARENE, H_ARENE);
@@ -213,6 +219,12 @@ public class Arene extends JFrame implements Global {
 		
 
 		jspChat.setViewportView(txtChat);
+		
+		if(this.client){
+			for(int i = 0; i < SON.length; i++){
+				this.lesSons[i] = new Son(CHEMINSONS + SON[i]);
+			}
+		}
 		
 	}
 

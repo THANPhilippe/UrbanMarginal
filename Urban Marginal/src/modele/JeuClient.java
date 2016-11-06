@@ -2,7 +2,6 @@ package modele;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import controleur.Controle;
 import outils.connexion.Connection;
 
@@ -29,7 +28,9 @@ public class JeuClient extends Jeu {
 			this.controle.evenementModele(this, "ajout panel murs", info);
 			fait = true;
 			}
+			else{
 			this.controle.evenementModele(this, "ajout panel consommables", info);
+			}
 		}
 		if(info instanceof JLabel){
 			this.controle.evenementModele(this, "ajout nouveau consommable", info);
@@ -39,7 +40,10 @@ public class JeuClient extends Jeu {
 		}
 		if(info instanceof String){
 			this.controle.evenementModele(this, "remplace chat", info);
-		}	
+		}
+		if(info instanceof Integer){
+			this.controle.evenementModele(this, "son", info);
+		}
 	}
 
 	@Override

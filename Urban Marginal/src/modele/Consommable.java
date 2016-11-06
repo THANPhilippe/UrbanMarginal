@@ -1,12 +1,14 @@
 package modele;
 
+import java.io.Serializable;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import controleur.Global;
 
-public class Consommable extends Objet implements Global {
+public class Consommable extends Objet implements Global, Serializable {
 	
 	String image;
 	String effet;

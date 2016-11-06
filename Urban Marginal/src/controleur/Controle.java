@@ -4,7 +4,6 @@ package controleur;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import modele.Label;
 import modele.Jeu;
 import modele.JeuClient;
@@ -24,6 +23,10 @@ public class Controle implements Global{
 	private ChoixJoueur frmChoixJoueur;
 	private Connection connection;
 	
+	/**
+	 * Suppression de l'ancien consommable et ajout du nouveau
+	 * @param newConsommable
+	 */
 	public void demandeSupression(JLabel newConsommable ){
 		frmArene.supprAjoutConsommable(newConsommable);
 		((JeuServeur)this.leJeu).envoi(newConsommable);
@@ -58,7 +61,10 @@ public class Controle implements Global{
 		}
 		if(ordre == "remplace chat"){
 			this.frmArene.remplaceChat(((String)info));
-		}	
+		}
+		if(ordre == "son"){
+			this.frmArene.joueSon((Integer) info);
+		}
 	}
 
 	private void evenementJeuServeur(String ordre, Object info) {

@@ -21,13 +21,17 @@ public class JeuServeur extends Jeu implements Global {
 	
 	public Consommable donneVie = new Consommable("ajout vie",CONSOVIE);
 	public Consommable bloquer = new Consommable("bloquer",CONSOBLO);
-	Consommable ListeConsommable[] = {donneVie, bloquer}; 
+	public Consommable damageup = new Consommable("degats supplementaires",CONSOUP);
+	Consommable ListeConsommable[] = {donneVie, bloquer, damageup}; 
 	
 	public JeuServeur(Controle controle){
 		this.controle = controle;
 		Label.setNbLabel(0);
 	}
 	
+	/**
+	 * Création d'un nouveau consommable
+	 */
 	public void envoiConsommable(){	
 		int x;
 		int i=0;
@@ -101,11 +105,19 @@ public class JeuServeur extends Jeu implements Global {
 		int x;
 		int i = 0;
 		while(i<NBCONSO){
-			x = (int) (Math.random() * 2);
+			x = (int) (Math.random() * 3);
 			lesConsommables.add(ListeConsommable[x]);
 			this.controle.evenementModele(this, "ajout consommable", lesConsommables.get(i).getLabel().getjLabel());
 			i++;
 		}
+	}
+	
+	/**
+	 * Retire l'effet du consommable dans l'arène
+	 * @param unConsommable
+	 */
+	public void retirerEffetConsommable(Consommable unConsommable){
+		lesConsommables.remove(unConsommable);
 	}
 	
 	public void nouveauLabelJeu(Label label){

@@ -41,13 +41,26 @@ public class Attaque extends Thread implements Global {
 			victime = this.toucheJoueur();
 			}while(laBoule.getPosX() > 0 && laBoule.getPosX() < L_ARENE && !toucheMur() && victime == null);
 			if(victime != null && !victime.estMort()){
-				victime.perteVie();
+				
+				if(attaquant.isSupplementaire() == true && victime.isBloquer() == false){
+					victime.perteVieSupplementaire();
+					attaquant.setSupplementaire(false);
+				}
+				else if(victime.isBloquer() == true){
+					victime.blocage();
+				}
+				else{
+					victime.perteVie();
+				}
+				
+				this.jeuServeur.envoi(HURT);
 				this.attaquant.gainVie();
 				for(int i = 1; i <= NBETATSBLESSE; i++){
 					victime.affiche(BLESSE, i);
 					this.pause(80, 0);
 				}
 				if(victime.estMort()){
+					this.jeuServeur.envoi(DEATH);
 					for(int i = 1; i <= NBETATSMORT; i++){
 						victime.affiche(MORT, i);
 						this.pause(80, 0);

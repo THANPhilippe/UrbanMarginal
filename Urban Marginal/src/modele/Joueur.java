@@ -23,7 +23,44 @@ public class Joueur extends Objet implements Global {
 	private static final int MAXVIE = 10;
 	private static final int GAIN = 1;
 	private static final int PERTE = 2;
+	private boolean bloquer = false;
+	private boolean supplementaire = false;
 	
+	/**
+	 * Perte de vie supplémentaire si l'attaquant a un bonus de dégât
+	 */
+	public void perteVieSupplementaire() {
+		if(this.vie == 1){
+			this.vie = vie -1;
+		}
+		else{
+			this.vie = vie -PERTE*2;
+		}
+	}
+
+	
+	/**
+	 * @param supplementaire the supplementaire to set
+	 */
+	public void setSupplementaire(boolean supplementaire) {
+		this.supplementaire = supplementaire;
+	}
+
+
+	/**
+	 * @return the supplementaire
+	 */
+	public boolean isSupplementaire() {
+		return supplementaire;
+	}
+	
+	/**
+	 * @return the bloquer
+	 */
+	public boolean isBloquer() {
+		return bloquer;
+	}
+
 	/**
 	 * @return the message
 	 */
@@ -49,11 +86,18 @@ public class Joueur extends Objet implements Global {
 		if(this.vie == 1){
 			this.vie = vie -1;
 		}
-		if(this.vie >0){
+		else{
 			this.vie = vie - PERTE;
 		}
-		else {
-			this.vie = 0;
+	}
+	
+	/**
+	 * Aucun dégât si la victime a touché le consommable "bloquer"
+	 */
+	
+	public void blocage(){
+		if(this.vie >0 && this.bloquer == true){
+			this.bloquer = false;
 		}
 	}
 	
@@ -110,14 +154,18 @@ public class Joueur extends Objet implements Global {
 		return false;
 	}
 	
-	//Vérifie si un consommable a été touché
-	private boolean toucheUnConsommable(ArrayList<Consommable> lesConsommables){
+	/**
+	 * 
+	 * @param lesConsommables
+	 * @return Si l'objet a été touché
+	 */
+	private Consommable toucheUnConsommable(ArrayList<Consommable> lesConsommables){
 		for(Consommable unConsommable : lesConsommables){
 			if(this.toucheObjet(unConsommable)){
-				return true;
+				return unConsommable;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	private void premierePosition(Hashtable<Connection, Joueur> lesJoueurs, ArrayList<Mur> lesMurs){
@@ -167,17 +215,21 @@ public class Joueur extends Objet implements Global {
 			position = ancpos;
 		}
 		
-		if(this.toucheUnConsommable(lesConsommables)){
-			for(Consommable unConsommable : lesConsommables){
+		if(this.toucheUnConsommable(lesConsommables) != null){
+			Consommable unConsommable = this.toucheUnConsommable(lesConsommables);
 				if("ajout vie" == unConsommable.getEffet()){
 					this.vie = vie + 2;
 					this.jeuServeur.envoiConsommable();
 				}
 				if("bloquer" == unConsommable.getEffet()){
-					this.vie = vie + 2;
+					this.bloquer = true;
 					this.jeuServeur.envoiConsommable();
 				}
-			}			
+				if("degats supplementaires" == unConsommable.getEffet()){
+					this.supplementaire = true;
+					this.jeuServeur.envoiConsommable();
+				}
+				this.jeuServeur.retirerEffetConsommable(unConsommable);
 		}
 	
 		
@@ -189,6 +241,8 @@ public class Joueur extends Objet implements Global {
 		return position;
 	}
 	
+
+
 	public void action(int action, Hashtable<Connection, Joueur> lesJoueurs, ArrayList<Mur> lesMurs, ArrayList<Consommable> lesConsommables){
 		switch(action){
 			case GAUCHE:
@@ -209,6 +263,7 @@ public class Joueur extends Objet implements Global {
 			
 			case TIRE:
 				if(!this.boule.getLabel().getjLabel().isVisible()){
+					this.jeuServeur.envoi(FIGHT);
 					this.boule.tireBoule(this, lesMurs, lesJoueurs);
 				}
 				break;
@@ -234,5 +289,6 @@ public class Joueur extends Objet implements Global {
 			this.jeuServeur.envoi(this.boule.getLabel());
 		}
 	}
+
 
 }
